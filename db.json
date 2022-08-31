@@ -1,0 +1,27 @@
+{
+  "polls": [
+    {
+      "id": 1,
+      "poll": "Man united or Arsenal",
+      "choices": [
+        {
+          "id": 1,
+          "choice": "Man united",
+          "votes": 0
+        },
+        {
+          "id": 2,
+          "choice": "Arsenal",
+          "votes": 0
+        }
+      ],
+      "comments": [
+        {
+          "id": 1,
+          "question": 1,
+          "comment": "I support chelsea, but I voted man united"
+        }
+      ]
+    }
+  ]
+}
