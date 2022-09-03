@@ -22,6 +22,29 @@
           "comment": "I support Chelsea, but I voted Man United"
         }
       ]
+    },
+    {
+      "id": 2,
+      "poll": "Chelsea vs Liverpool",
+      "choices": [
+        {
+          "id": 1,
+          "choice": "Chelsea",
+          "votes": 0
+        },
+        {
+          "id": 2,
+          "choice": "Liverpool",
+          "votes": 0
+        }
+      ],
+      "comments": [
+        {
+          "id": 1,
+          "question": 1,
+          "comment": "you never walk alone"
+        }
+      ]
     }
   ]
 }
