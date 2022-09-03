@@ -6,7 +6,7 @@ const displayPolls = async () => {
     let ul = document.createElement('ol')
     for (let x = 0; x < polls.length; x++) {
         let li = document.createElement('li')
-        li.classList.add('pll')
+        li.classList.add('poll', 'mb-2')
         let a = document.createElement('a')
         a.textContent = polls[x]['poll']
         a.href = '#'
@@ -25,7 +25,7 @@ const fetchData = async () => {
     let url = 'http://localhost:3000/polls'
     let url2 = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls'
 
-    const res = await fetch(url2)
+    const res = await fetch(url)
     return res.json()
 }
 

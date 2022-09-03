@@ -1,6 +1,11 @@
-.container {
+html, body {
     font-size: large;
 }
+
 .container a {
     text-decoration: none;
+}
+
+main .container ul li {
+    margin-bottom: 20px;
 }
