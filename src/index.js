@@ -1,36 +1,78 @@
-let main = document.querySelector('main')
-let addPoll = document.querySelector('#new-poll')
+let main = document.querySelector('#main')
+let newPollBtn = document.querySelector('#newPoll')
 
-function clearMain() {
+function clearMainDiv() {
     while (main.firstChild) {
         main.removeChild(main.lastChild);
     }
 }
 
-function loadingMessage() {
-    clearMain()
-    let loadingMsg = document.createElement('p')
-    loadingMsg.textContent = "Fetching data ..."
-    main.appendChild(loadingMsg)
+function loadingMessage(x) {
+    let p = document.createElement('p')
+    p.classList.add('mb-3')
+    p.textContent = `Fetching ${x} ...`
+    main.appendChild(p)
     setTimeout(() => {
-        loadingMsg.textContent = "Latest Polls"
-        // main.removeChild(loadingMsg)
-    }, 1500);
+        p.textContent = `Latest ${x}`
+    }, 2000);
 }
 
-addPoll.onclick = () => {
-    clearMain()
+function goBackHome() {
+    let p = document.createElement('p')
+    p.classList.add('mb-4')
     let a = document.createElement('a')
+    a.classList.add('text-decoration-none')
     a.textContent = '← Back to home'
     a.href = '#'
-    a.onclick = () => displayPolls()
+    a.onclick = () => homePage()
+    p.appendChild(a)
+    return p
+}
+
+function questionInput() {
     let choiceInput = document.createElement('input')
-    choiceInput.classList.add('mt-4', 'col-sm-4')
     choiceInput.classList.add('form-control')
     choiceInput.type = 'text'
     choiceInput.placeholder = "Question"
-    main.appendChild(a)
-    main.appendChild(choiceInput)
+    return choiceInput
+}
+
+function choiceInput(x) {
+    let choiceInput = document.createElement('input')
+    choiceInput.classList.add('form-control', 'mt-2')
+    choiceInput.type = 'text'
+    choiceInput.id = `Choice ${x}`
+    choiceInput.placeholder = `Choice ${x}`
+    return choiceInput
+}
+
+function pollFormSubmit() {
+    let choiceInput = document.createElement('input')
+    choiceInput.classList.add('form-control', 'btn', 'btn-success', 'mt-2')
+    choiceInput.type = 'submit'
+    choiceInput.id = 'submit'
+    return choiceInput
+}
+
+function pollForm() {
+    let homeBtn = goBackHome()
+    let question = questionInput()
+    let choice1 = choiceInput(1)
+    let choice2 = choiceInput(2)
+    let submit = pollFormSubmit()
+    let form = document.createElement('form' )
+    form.classList.add('col-sm-7')
+    form.appendChild(homeBtn)
+    form.appendChild(question)
+    form.appendChild(choice1).
+    form.appendChild(choice2)
+    form.appendChild(submit)
+    main.appendChild(form)
+}
+
+newPollBtn.onclick = () => {
+    clearMainDiv()
+    pollForm()
 }
 
 const displayChoices = data => {
@@ -38,9 +80,9 @@ const displayChoices = data => {
     alert(data)
 }
 
-const displayPolls = async () => {
-    clearMain()
-    loadingMessage()
+const homePage = async () => {
+    clearMainDiv()
+    loadingMessage('Polls')
     const pollsDiv = document.createElement('div')
     let ul = document.createElement('ol')
     const polls = await fetchData()
@@ -48,6 +90,7 @@ const displayPolls = async () => {
         let li = document.createElement('li')
         li.classList.add('poll', 'mb-2')
         let a = document.createElement('a')
+        a.classList.add('text-decoration-none')
         a.textContent = polls[x]['poll']
         a.href = '#'
         a.id = `${x}`
@@ -67,7 +110,7 @@ const fetchData = async () => {
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
-    displayPolls().then(r => console.log(r))
+    homePage().then(r => console.log(r))
     console.log('DOM fully loaded and parsed');
 });
 
