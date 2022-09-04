@@ -13,26 +13,24 @@ function loadingMessage() {
     loadingMsg.textContent = "Fetching data ..."
     main.appendChild(loadingMsg)
     setTimeout(() => {
-        main.removeChild(loadingMsg)
+        loadingMsg.textContent = "Latest Polls"
+        // main.removeChild(loadingMsg)
     }, 1500);
 }
 
 addPoll.onclick = () => {
     clearMain()
-    let p = document.createElement('p')
     let a = document.createElement('a')
-    p.classList.add('mb-3')
     a.textContent = '← Back to home'
     a.href = '#'
     a.onclick = () => displayPolls()
-    let choicesForm = document.createElement('form')
     let choiceInput = document.createElement('input')
+    choiceInput.classList.add('mt-4', 'col-sm-4')
     choiceInput.classList.add('form-control')
     choiceInput.type = 'text'
     choiceInput.placeholder = "Question"
-    p.appendChild(a)
-    choicesForm.appendChild(choiceInput)
-    main.appendChild(p).appendChild(choicesForm)
+    main.appendChild(a)
+    main.appendChild(choiceInput)
 }
 
 const displayChoices = data => {
