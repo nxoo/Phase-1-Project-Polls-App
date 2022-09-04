@@ -1,9 +1,51 @@
-let pollsDiv = document.querySelector('#polls-list')
+let main = document.querySelector('main')
+let addPoll = document.querySelector('#new-poll')
+
+function clearMain() {
+    while (main.firstChild) {
+        main.removeChild(main.lastChild);
+    }
+}
+
+function loadingMessage() {
+    clearMain()
+    let loadingMsg = document.createElement('p')
+    loadingMsg.textContent = "Fetching data ..."
+    main.appendChild(loadingMsg)
+    setTimeout(() => {
+        main.removeChild(loadingMsg)
+    }, 1500);
+}
+
+addPoll.onclick = () => {
+    clearMain()
+    let p = document.createElement('p')
+    let a = document.createElement('a')
+    p.classList.add('mb-3')
+    a.textContent = '← Back to home'
+    a.href = '#'
+    a.onclick = () => displayPolls()
+    let choicesForm = document.createElement('form')
+    let choiceInput = document.createElement('input')
+    choiceInput.classList.add('form-control')
+    choiceInput.type = 'text'
+    choiceInput.placeholder = "Question"
+    p.appendChild(a)
+    choicesForm.appendChild(choiceInput)
+    main.appendChild(p).appendChild(choicesForm)
+}
+
+const displayChoices = data => {
+    let poll = document.querySelector('li')
+    alert(data)
+}
 
 const displayPolls = async () => {
-    const polls = await fetchData()
-    console.log(polls)
+    clearMain()
+    loadingMessage()
+    const pollsDiv = document.createElement('div')
     let ul = document.createElement('ol')
+    const polls = await fetchData()
     for (let x = 0; x < polls.length; x++) {
         let li = document.createElement('li')
         li.classList.add('poll', 'mb-2')
@@ -11,14 +53,11 @@ const displayPolls = async () => {
         a.textContent = polls[x]['poll']
         a.href = '#'
         a.id = `${x}`
+        a.onclick = () => displayChoices(x)
         ul.appendChild(li).appendChild(a)
     }
-    pollsDiv.appendChild(ul)
+    main.appendChild(pollsDiv).appendChild(ul)
     return await polls
-}
-
-const displayChoices = data => {
-    let poll = document.querySelector('li')
 }
 
 const fetchData = async () => {
@@ -30,7 +69,7 @@ const fetchData = async () => {
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
-    displayPolls()
+    displayPolls().then(r => console.log(r))
     console.log('DOM fully loaded and parsed');
 });
 
