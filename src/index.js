@@ -59,7 +59,7 @@ async function pollsList() {
     const polls = await fetchData()
     for (let x = 0; x < polls.length; x++) {
         let li = document.createElement('li')
-        li.classList.add('poll', 'mb-2', 'fs-4')
+        li.classList.add('poll', 'mb-2', 'fs-3')
         let a = document.createElement('a')
         a.classList.add('text-decoration-none')
         a.textContent = polls[x]['poll']

@@ -2,17 +2,17 @@
   "polls": [
     {
       "id": 1,
-      "poll": "Man united or Arsenal",
+      "poll": "Man united vs Arsenal",
       "choices": [
         {
           "id": 1,
           "choice": "Man united",
-          "votes": 0
+          "votes": 3
         },
         {
           "id": 2,
           "choice": "Arsenal",
-          "votes": 0
+          "votes": 1
         }
       ],
       "comments": [
