@@ -24,6 +24,7 @@ function Navbar() {
 
 Navbar()
 
+// select this after calling Navbar function so that
 let home = document.querySelector('#home')
 let newPollBtn = document.querySelector('#newPoll')
 
@@ -100,22 +101,56 @@ async function pollVotePage(x) {
     loadingMessage('Poll Data')
     const data = await fetchData()
     const poll = data[x]
-    console.log(poll)
+    console.log('po', poll)
     let div = document.createElement('div')
     let p = document.createElement('p')
     let choices = await pollChoices(poll['choices'])
     let submit = document.createElement('input')
+    let resultsTag = document.createElement('p')
+    let resultsBtn = document.createElement('a')
     submit.type = 'submit'
     submit.value = 'vote'
-    submit.classList.add('btn', 'btn-success', 'mt-4')
+    submit.classList.add('btn', 'btn-success', 'my-4')
     p.classList.add('fs-4')
     p.textContent = poll['poll']
+    resultsBtn.textContent = "Check results"
+    resultsBtn.href = "#"
+    resultsBtn.classList.add('text-decoration-none')
+    resultsBtn.onclick = () => pollResults(poll['id']-1)
     div.appendChild(p)
     div.appendChild(choices)
     div.appendChild(submit)
+    div.appendChild(resultsTag).appendChild(resultsBtn)
     main.appendChild(div)
 }
 
+// vote results
+async function pollResults(x) {
+    clearMainDiv()
+    loadingMessage('Poll Data')
+    const data = await fetchData()
+    const poll = data[x]
+    console.log(poll)
+    let div = document.createElement('div')
+    let p = document.createElement('p')
+    let ul = document.createElement('ul')
+    let backBtn = document.createElement('a')
+    backBtn.textContent = "Vote again"
+    backBtn.classList.add('text-decoration-none')
+    backBtn.href = '#'
+    //backBtn.onclick = () => pollVotePage(poll['id'])
+    backBtn.onclick = () => pollVotePage(poll['id']-1)
+    p.textContent = poll['poll']
+    div.appendChild(p)
+    for (let x=0; x<poll['choices'].length; x++) {
+        let choice = document.createElement('li')
+        choice.textContent = `${poll['choices'][x]['choice']} --- ${poll['choices'][x]['votes']} votes`
+        ul.appendChild(choice)
+    }
+    div.appendChild(ul)
+    div.appendChild(backBtn)
+    main.appendChild(div)
+}
 
 // vote form components
 function questionInput() {
