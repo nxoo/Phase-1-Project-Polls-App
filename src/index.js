@@ -56,16 +56,17 @@ async function pollChoices(choices) {
         let choice = document.createElement('input')
         choice.type = 'radio'
         choice.id = `${choices[x]['id']}`
+        choice.name = 'choices'
         choice.classList.add('form-check-input')
         let label = document.createElement('label')
-        label.for = `${choices[x]['id']}`
+        label.htmlFor = `${choices[x]['id']}`
         label.textContent = choices[x]['choice']
         label.classList.add('form-check-label')
         form.appendChild(choice)
         form.appendChild(label)
         div.appendChild(form)
     }
-    main.appendChild(div)
+    return div
 }
 
 async function pollVotePage(x) {
@@ -76,10 +77,16 @@ async function pollVotePage(x) {
     console.log(poll)
     let div = document.createElement('div')
     let p = document.createElement('p')
+    let choices = await pollChoices(poll['choices'])
+    let submit = document.createElement('input')
+    submit.type = 'submit'
+    submit.value = 'vote'
+    submit.classList.add('btn', 'btn-success', 'mt-4')
     p.classList.add('fs-4')
     p.textContent = poll['poll']
-    await pollChoices(poll['choices'])
     div.appendChild(p)
+    div.appendChild(choices)
+    div.appendChild(submit)
     main.appendChild(div)
 }
 
