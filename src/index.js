@@ -1,6 +1,15 @@
 let main = document.querySelector('#main')
+let home = document.querySelector('#home')
 let newPollBtn = document.querySelector('#newPoll')
 
+const fetchData = async () => {
+    let url = 'http://localhost:3000/polls'
+    let url2 = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls'
+    const res = await fetch(url2)
+    return res.json()
+}
+
+// homepage components
 function clearMainDiv() {
     while (main.firstChild) {
         main.removeChild(main.lastChild);
@@ -9,7 +18,7 @@ function clearMainDiv() {
 
 function loadingMessage(x) {
     let p = document.createElement('p')
-    p.classList.add('mb-3')
+    p.classList.add('mb-3', 'fs-6')
     p.textContent = `Fetching ${x} ...`
     main.appendChild(p)
     setTimeout(() => {
@@ -17,18 +26,65 @@ function loadingMessage(x) {
     }, 2000);
 }
 
-function goBackHome() {
-    let p = document.createElement('p')
-    p.classList.add('mb-4')
-    let a = document.createElement('a')
-    a.classList.add('text-decoration-none')
-    a.textContent = '← Back to home'
-    a.href = '#'
-    a.onclick = () => homePage()
-    p.appendChild(a)
-    return p
+async function pollsList() {
+    const pollsDiv = document.createElement('div')
+    let ul = document.createElement('ol')
+    const polls = await fetchData()
+    for (let x = 0; x < polls.length; x++) {
+        let li = document.createElement('li')
+        li.classList.add('poll', 'mb-2', 'fs-4')
+        let a = document.createElement('a')
+        a.classList.add('text-decoration-none')
+        a.textContent = polls[x]['poll']
+        a.href = '#'
+        a.id = `${x}`
+        a.onclick = () => pollVotePage(x)
+        ul.appendChild(li).appendChild(a)
+    }
+    main.appendChild(pollsDiv).appendChild(ul)
+    return polls
 }
 
+// vote page components
+
+async function pollChoices(choices) {
+    console.log(choices)
+    let div = document.createElement('div')
+    for (let x=0; x<choices.length; x++) {
+        let form = document.createElement('div')
+        form.classList.add('form-check')
+        let choice = document.createElement('input')
+        choice.type = 'radio'
+        choice.id = `${choices[x]['id']}`
+        choice.classList.add('form-check-input')
+        let label = document.createElement('label')
+        label.for = `${choices[x]['id']}`
+        label.textContent = choices[x]['choice']
+        label.classList.add('form-check-label')
+        form.appendChild(choice)
+        form.appendChild(label)
+        div.appendChild(form)
+    }
+    main.appendChild(div)
+}
+
+async function pollVotePage(x) {
+    clearMainDiv()
+    loadingMessage('Poll Data')
+    const data = await fetchData()
+    const poll = data[x]
+    console.log(poll)
+    let div = document.createElement('div')
+    let p = document.createElement('p')
+    p.classList.add('fs-4')
+    p.textContent = poll['poll']
+    await pollChoices(poll['choices'])
+    div.appendChild(p)
+    main.appendChild(div)
+}
+
+
+// vote form components
 function questionInput() {
     let choiceInput = document.createElement('input')
     choiceInput.classList.add('form-control')
@@ -55,62 +111,36 @@ function pollFormSubmit() {
 }
 
 function pollForm() {
-    let homeBtn = goBackHome()
+    let div = document.createElement('div' )
+    div.textContent = "Create a new poll"
+    let form = document.createElement('form' )
+    form.classList.add('col-sm-7', 'mt-4')
     let question = questionInput()
     let choice1 = choiceInput(1)
     let choice2 = choiceInput(2)
     let submit = pollFormSubmit()
-    let form = document.createElement('form' )
-    form.classList.add('col-sm-7')
-    form.appendChild(homeBtn)
     form.appendChild(question)
-    form.appendChild(choice1).
+    form.appendChild(choice1)
     form.appendChild(choice2)
     form.appendChild(submit)
-    main.appendChild(form)
+    main.appendChild(div).appendChild(form)
 }
 
+// navbar `+ Create new poll` button
 newPollBtn.onclick = () => {
     clearMainDiv()
     pollForm()
 }
 
-const displayChoices = data => {
-    let poll = document.querySelector('li')
-    alert(data)
-}
-
-const homePage = async () => {
+home.onclick = () => {
     clearMainDiv()
     loadingMessage('Polls')
-    const pollsDiv = document.createElement('div')
-    let ul = document.createElement('ol')
-    const polls = await fetchData()
-    for (let x = 0; x < polls.length; x++) {
-        let li = document.createElement('li')
-        li.classList.add('poll', 'mb-2')
-        let a = document.createElement('a')
-        a.classList.add('text-decoration-none')
-        a.textContent = polls[x]['poll']
-        a.href = '#'
-        a.id = `${x}`
-        a.onclick = () => displayChoices(x)
-        ul.appendChild(li).appendChild(a)
-    }
-    main.appendChild(pollsDiv).appendChild(ul)
-    return await polls
-}
-
-const fetchData = async () => {
-    let url = 'http://localhost:3000/polls'
-    let url2 = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls'
-
-    const res = await fetch(url2)
-    return res.json()
+    pollsList().then(res => console.log(res))
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
-    homePage().then(r => console.log(r))
-    console.log('DOM fully loaded and parsed');
+    clearMainDiv()
+    loadingMessage('Polls')
+    pollsList().then(res => console.log(res))
 });
 
