@@ -1,4 +1,29 @@
 let main = document.querySelector('#main')
+let nav = document.querySelector('#nav')
+
+// Navbar
+function Navbar() {
+    nav.classList.add('text-center', 'fs-4', 'py-3', 'mb-3', 'border-bottom')
+    let link1 = document.createElement('a')
+    let separator = document.createElement('span')
+    let link2 = document.createElement('a')
+    link1.textContent = "Home"
+    link1.id = "home"
+    link1.classList.add('text-decoration-none', 'mx-3', 'text-secondary')
+    link1.href = '#'
+    link2.textContent = "create Poll"
+    link2.id = 'newPoll'
+    link2.classList.add('text-decoration-none', 'mx-3', 'text-secondary')
+    link2.href = '#'
+    separator.textContent = '|'
+    separator.classList.add('text-secondary')
+    nav.appendChild(link1)
+    nav.appendChild(separator)
+    nav.appendChild(link2)
+}
+
+Navbar()
+
 let home = document.querySelector('#home')
 let newPollBtn = document.querySelector('#newPoll')
 
@@ -8,6 +33,7 @@ const fetchData = async () => {
     const res = await fetch(url2)
     return res.json()
 }
+
 
 // homepage components
 function clearMainDiv() {
