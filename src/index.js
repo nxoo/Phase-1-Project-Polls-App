@@ -122,6 +122,12 @@ async function pollVotePage(x) {
     main.appendChild(div)
 }
 
+// pluralize `vote` where appropriate
+let pluralize = x => {
+    if (x === 1) return `${x} vote`
+    else return `${x} votes`
+}
+
 // vote results
 async function pollResults(x) {
     clearMainDiv()
@@ -142,7 +148,8 @@ async function pollResults(x) {
     div.appendChild(p)
     for (let x = 0; x < poll['choices'].length; x++) {
         let choice = document.createElement('li')
-        choice.textContent = `${poll['choices'][x]['choice']} --- ${poll['choices'][x]['votes']} votes`
+        let votes = poll['choices'][x]['votes']
+        choice.textContent = `${poll['choices'][x]['choice']} -- ${pluralize(votes)}`
         ul.appendChild(choice)
     }
     div.appendChild(ul)
