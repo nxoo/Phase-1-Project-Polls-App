@@ -161,6 +161,16 @@ function questionInput() {
     return choiceInput
 }
 
+function choiceInput(counter) {
+    let input = document.createElement("input");
+    input.id = 'choice' + counter;
+    input.type = 'text';
+    input.name = 'name';
+    input.classList.add('form-control', 'my-1')
+    input.placeholder = `Choice  ${counter}`
+    return input
+}
+
 function pollFormSubmit() {
     let choiceInput = document.createElement('input')
     choiceInput.classList.add('form-control', 'btn', 'btn-success', 'my-2')
@@ -173,13 +183,17 @@ function pollForm() {
     let form = document.createElement('form')
     let p = document.createElement('p')
     let choices = document.createElement('div')
+    let div = document.createElement('div')
     let addChoice = document.createElement('a')
     let removeChoice = document.createElement('a')
     let sep = document.createElement('span')
     let question = questionInput()
     let submit = pollFormSubmit()
+    let choice1 = choiceInput(1)
+    let choice2 = choiceInput(2)
 
     p.textContent = "Create a new poll"
+    div.classList.add('my-4')
     addChoice.id = 'addChoice'
     addChoice.href = '#'
     addChoice.textContent = "Add Choice"
@@ -191,20 +205,15 @@ function pollForm() {
     sep.textContent = ' | '
     form.classList.add('col-sm-7', 'mt-4')
 
-    let counter = 0;
+    let counter = 2;
     let addInput = function () {
         counter++;
-        let input = document.createElement("input");
-        input.id = 'choice' + counter;
-        input.type = 'text';
-        input.name = 'name';
-        input.classList.add('form-control', 'mb-2')
-        input.placeholder = `Choice  ${counter}`
+        let input = choiceInput(counter)
         choices.appendChild(input);
     };
 
     let removeInput = function () {
-        if (choices.firstChild) {
+        if (choices.firstChild && counter > 2) {
             counter--;
             choices.removeChild(choices.lastChild);
         }
@@ -213,11 +222,15 @@ function pollForm() {
     addChoice.onclick = () => addInput()
     removeChoice.onclick = () => removeInput()
 
+    div.appendChild(addChoice)
+    div.appendChild(sep)
+    div.appendChild(removeChoice)
+
     form.appendChild(p)
     form.appendChild(question)
-    form.appendChild(addChoice)
-    form.appendChild(sep)
-    form.appendChild(removeChoice)
+    form.appendChild(choice1)
+    form.appendChild(choice2)
+    form.appendChild(div)
     form.appendChild(choices)
     form.appendChild(submit)
     main.appendChild(form)
