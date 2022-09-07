@@ -2,11 +2,11 @@
   "polls": [
     {
       "id": 1,
-      "poll": "Man united vs Arsenal",
+      "poll": "Man United vs Arsenal",
       "choices": [
         {
           "id": 1,
-          "choice": "Man united",
+          "choice": "Man United",
           "votes": 3
         },
         {
@@ -20,6 +20,11 @@
           "id": 1,
           "question": 1,
           "comment": "I support Chelsea, but I voted Man United"
+        },
+        {
+          "id": 2,
+          "question": 1,
+          "comment": "Man United beat Arsenal yesterday"
         }
       ]
     },

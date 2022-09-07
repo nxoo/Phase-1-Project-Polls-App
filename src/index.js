@@ -47,7 +47,7 @@ function loadingMessage(x) {
     main.appendChild(p)
     setTimeout(() => {
         p.textContent = `Latest ${x}`
-    }, 2500);
+    }, 2000);
 }
 
 // returns an unordered list of polls
@@ -155,6 +155,8 @@ function questionInput() {
     let choiceInput = document.createElement('input')
     choiceInput.classList.add('form-control', 'mb-2')
     choiceInput.type = 'text'
+    choiceInput.name = 'question'
+    choiceInput.id = 'question'
     choiceInput.placeholder = "Question"
     return choiceInput
 }
@@ -163,7 +165,7 @@ function choiceInput(counter) {
     let input = document.createElement("input");
     input.id = 'choice' + counter;
     input.type = 'text';
-    input.name = 'name';
+    input.name = 'choice' + counter;
     input.classList.add('form-control', 'my-2')
     input.placeholder = `Choice  ${counter}`
     return input
@@ -184,7 +186,7 @@ function pollForm() {
     let div = document.createElement('div')
     let addChoice = document.createElement('a')
     let removeChoice = document.createElement('a')
-    let sep = document.createElement('span')
+    let separator = document.createElement('span')
     let question = questionInput()
     let submit = pollFormSubmit()
     let choice1 = choiceInput(1)
@@ -200,7 +202,8 @@ function pollForm() {
     removeChoice.href = '#'
     removeChoice.textContent = "Remove Choice"
     removeChoice.classList.add('my-2', 'text-decoration-none')
-    sep.textContent = ' | '
+    separator.textContent = ' | '
+    separator.classList.add('text-secondary')
     form.classList.add('col-sm-7', 'mt-4')
 
     let counter = 2;
@@ -221,7 +224,7 @@ function pollForm() {
     removeChoice.onclick = () => removeInput()
 
     div.appendChild(addChoice)
-    div.appendChild(sep)
+    div.appendChild(separator)
     div.appendChild(removeChoice)
 
     form.appendChild(p)
