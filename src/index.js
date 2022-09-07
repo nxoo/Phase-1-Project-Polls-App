@@ -24,7 +24,7 @@ function Navbar() {
 
 Navbar()
 
-// select this after calling Navbar function so that
+// select this after calling Navbar function so that you can access `home` & `newPollBtn` variables
 let home = document.querySelector('#home')
 let newPollBtn = document.querySelector('#newPoll')
 
@@ -34,7 +34,6 @@ const fetchData = async () => {
     const res = await fetch(url2)
     return res.json()
 }
-
 
 // homepage components
 function clearMainDiv() {
@@ -77,7 +76,7 @@ async function pollsList() {
 async function pollChoices(choices) {
     console.log(choices)
     let div = document.createElement('div')
-    for (let x=0; x<choices.length; x++) {
+    for (let x = 0; x < choices.length; x++) {
         let form = document.createElement('div')
         form.classList.add('form-check')
         let choice = document.createElement('input')
@@ -116,7 +115,7 @@ async function pollVotePage(x) {
     resultsBtn.textContent = "Check results"
     resultsBtn.href = "#"
     resultsBtn.classList.add('text-decoration-none')
-    resultsBtn.onclick = () => pollResults(poll['id']-1)
+    resultsBtn.onclick = () => pollResults(poll['id'] - 1)
     div.appendChild(p)
     div.appendChild(choices)
     div.appendChild(submit)
@@ -133,16 +132,17 @@ async function pollResults(x) {
     console.log(poll)
     let div = document.createElement('div')
     let p = document.createElement('p')
+    p.classList.add('fs-4')
     let ul = document.createElement('ul')
     let backBtn = document.createElement('a')
     backBtn.textContent = "Vote again"
     backBtn.classList.add('text-decoration-none')
     backBtn.href = '#'
     //backBtn.onclick = () => pollVotePage(poll['id'])
-    backBtn.onclick = () => pollVotePage(poll['id']-1)
+    backBtn.onclick = () => pollVotePage(poll['id'] - 1)
     p.textContent = poll['poll']
     div.appendChild(p)
-    for (let x=0; x<poll['choices'].length; x++) {
+    for (let x = 0; x < poll['choices'].length; x++) {
         let choice = document.createElement('li')
         choice.textContent = `${poll['choices'][x]['choice']} --- ${poll['choices'][x]['votes']} votes`
         ul.appendChild(choice)
@@ -155,43 +155,72 @@ async function pollResults(x) {
 // vote form components
 function questionInput() {
     let choiceInput = document.createElement('input')
-    choiceInput.classList.add('form-control')
+    choiceInput.classList.add('form-control', 'mb-2')
     choiceInput.type = 'text'
     choiceInput.placeholder = "Question"
     return choiceInput
 }
 
-function choiceInput(x) {
-    let choiceInput = document.createElement('input')
-    choiceInput.classList.add('form-control', 'mt-2')
-    choiceInput.type = 'text'
-    choiceInput.id = `Choice ${x}`
-    choiceInput.placeholder = `Choice ${x}`
-    return choiceInput
-}
-
 function pollFormSubmit() {
     let choiceInput = document.createElement('input')
-    choiceInput.classList.add('form-control', 'btn', 'btn-success', 'mt-2')
+    choiceInput.classList.add('form-control', 'btn', 'btn-success', 'my-2')
     choiceInput.type = 'submit'
     choiceInput.id = 'submit'
     return choiceInput
 }
 
 function pollForm() {
-    let div = document.createElement('div' )
-    div.textContent = "Create a new poll"
-    let form = document.createElement('form' )
-    form.classList.add('col-sm-7', 'mt-4')
+    let form = document.createElement('form')
+    let p = document.createElement('p')
+    let choices = document.createElement('div')
+    let addChoice = document.createElement('a')
+    let removeChoice = document.createElement('a')
+    let sep = document.createElement('span')
     let question = questionInput()
-    let choice1 = choiceInput(1)
-    let choice2 = choiceInput(2)
     let submit = pollFormSubmit()
+
+    p.textContent = "Create a new poll"
+    addChoice.id = 'addChoice'
+    addChoice.href = '#'
+    addChoice.textContent = "Add Choice"
+    addChoice.classList.add('my-2', 'text-decoration-none')
+    removeChoice.id = 'removeChoice'
+    removeChoice.href = '#'
+    removeChoice.textContent = "Remove Choice"
+    removeChoice.classList.add('my-2', 'text-decoration-none')
+    sep.textContent = ' | '
+    form.classList.add('col-sm-7', 'mt-4')
+
+    let counter = 0;
+    let addInput = function () {
+        counter++;
+        let input = document.createElement("input");
+        input.id = 'choice' + counter;
+        input.type = 'text';
+        input.name = 'name';
+        input.classList.add('form-control', 'mb-2')
+        input.placeholder = `Choice  ${counter}`
+        choices.appendChild(input);
+    };
+
+    let removeInput = function () {
+        if (choices.firstChild) {
+            counter--;
+            choices.removeChild(choices.lastChild);
+        }
+    };
+
+    addChoice.onclick = () => addInput()
+    removeChoice.onclick = () => removeInput()
+
+    form.appendChild(p)
     form.appendChild(question)
-    form.appendChild(choice1)
-    form.appendChild(choice2)
+    form.appendChild(addChoice)
+    form.appendChild(sep)
+    form.appendChild(removeChoice)
+    form.appendChild(choices)
     form.appendChild(submit)
-    main.appendChild(div).appendChild(form)
+    main.appendChild(form)
 }
 
 // navbar `+ Create new poll` button
