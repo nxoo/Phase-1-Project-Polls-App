@@ -107,7 +107,7 @@ async function pollVotePage(x) {
     let resultsTag = document.createElement('p')
     let resultsBtn = document.createElement('a')
     submit.type = 'submit'
-    submit.value = 'vote'
+    submit.value = 'Vote'
     submit.classList.add('btn', 'btn-success', 'my-4')
     p.classList.add('fs-4')
     p.textContent = poll['poll']
