@@ -1,8 +1,6 @@
-let main = document.querySelector('#main')
-let nav = document.querySelector('#nav')
-
 // Navbar
-function Navbar() {
+(function () {
+    let nav = document.querySelector('#nav')
     nav.classList.add('text-center', 'fs-4', 'py-3', 'mb-3', 'border-bottom')
     let link1 = document.createElement('a')
     let separator = document.createElement('span')
@@ -11,7 +9,7 @@ function Navbar() {
     link1.id = "home"
     link1.classList.add('text-decoration-none', 'mx-3', 'text-secondary')
     link1.href = '#'
-    link2.textContent = "create Poll"
+    link2.textContent = "Create Poll"
     link2.id = 'newPoll'
     link2.classList.add('text-decoration-none', 'mx-3', 'text-secondary')
     link2.href = '#'
@@ -20,13 +18,7 @@ function Navbar() {
     nav.appendChild(link1)
     nav.appendChild(separator)
     nav.appendChild(link2)
-}
-
-Navbar()
-
-// select this after calling Navbar function so that you can access `home` & `newPollBtn` variables
-let home = document.querySelector('#home')
-let newPollBtn = document.querySelector('#newPoll')
+})();
 
 const fetchData = async () => {
     let url = 'http://localhost:3000/polls'
@@ -35,13 +27,19 @@ const fetchData = async () => {
     return res.json()
 }
 
-// homepage components
+let main = document.querySelector('#main')
+// select this after calling Navbar function so that you can access `home` & `newPollBtn` variables
+let home = document.querySelector('#home')
+let newPollBtn = document.querySelector('#newPoll')
+
+// clear div#main components
 function clearMainDiv() {
     while (main.firstChild) {
         main.removeChild(main.lastChild);
     }
 }
 
+// message to display when fetching data
 function loadingMessage(x) {
     let p = document.createElement('p')
     p.classList.add('mb-3', 'fs-6')
@@ -49,9 +47,10 @@ function loadingMessage(x) {
     main.appendChild(p)
     setTimeout(() => {
         p.textContent = `Latest ${x}`
-    }, 2000);
+    }, 2500);
 }
 
+// returns an unordered list of polls
 async function pollsList() {
     const pollsDiv = document.createElement('div')
     let ul = document.createElement('ol')
@@ -112,7 +111,7 @@ async function pollVotePage(x) {
     submit.classList.add('btn', 'btn-success', 'my-4')
     p.classList.add('fs-4')
     p.textContent = poll['poll']
-    resultsBtn.textContent = "Check results"
+    resultsBtn.textContent = "Check Results"
     resultsBtn.href = "#"
     resultsBtn.classList.add('text-decoration-none')
     resultsBtn.onclick = () => pollResults(poll['id'] - 1)
@@ -135,10 +134,9 @@ async function pollResults(x) {
     p.classList.add('fs-4')
     let ul = document.createElement('ul')
     let backBtn = document.createElement('a')
-    backBtn.textContent = "Vote again"
+    backBtn.textContent = "Vote Again"
     backBtn.classList.add('text-decoration-none')
     backBtn.href = '#'
-    //backBtn.onclick = () => pollVotePage(poll['id'])
     backBtn.onclick = () => pollVotePage(poll['id'] - 1)
     p.textContent = poll['poll']
     div.appendChild(p)
@@ -166,14 +164,14 @@ function choiceInput(counter) {
     input.id = 'choice' + counter;
     input.type = 'text';
     input.name = 'name';
-    input.classList.add('form-control', 'my-1')
+    input.classList.add('form-control', 'my-2')
     input.placeholder = `Choice  ${counter}`
     return input
 }
 
 function pollFormSubmit() {
     let choiceInput = document.createElement('input')
-    choiceInput.classList.add('form-control', 'btn', 'btn-success', 'my-2')
+    choiceInput.classList.add('form-control', 'btn', 'btn-success', 'my-1')
     choiceInput.type = 'submit'
     choiceInput.id = 'submit'
     return choiceInput
@@ -192,7 +190,7 @@ function pollForm() {
     let choice1 = choiceInput(1)
     let choice2 = choiceInput(2)
 
-    p.textContent = "Create a new poll"
+    p.textContent = "Create a New Poll"
     div.classList.add('my-4')
     addChoice.id = 'addChoice'
     addChoice.href = '#'
