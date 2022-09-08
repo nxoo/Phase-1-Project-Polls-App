@@ -27,7 +27,7 @@ const fetchData = async () => {
         url = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls'
     }
     const res = await fetch(url)
-    console.log(url)
+    console.log(host, url)
     return res.json()
 }
 
