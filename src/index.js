@@ -270,14 +270,20 @@ function pollForm(name) {
         e.preventDefault()
         let formData = new FormData(form)
         let formValues = [...formData.entries()]
+
+        // check if form has an empty input
+        for (let x=0; x<formValues.length; x++) {
+            if (formValues[x][1] === '') {
+                alert("Form can't be empty")
+                return
+            }
+        }
         // template of how data looks in db.jon
         let jsonData = {poll: formValues[0][1], choices: [], comments: []}
         for (let x=1; x<formValues.length; x++) {
             // loop through choices which start at index 1 and add them to db.json[choices]
             jsonData.choices.push({id:x, choice: formValues[x][1], votes: 0})
         }
-        console.log(formValues)
-        console.log(jsonData)
         fetch('http://localhost:3000/polls', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
