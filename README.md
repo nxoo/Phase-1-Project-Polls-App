@@ -6,10 +6,12 @@
 This is a polling app where users can create polls, vote and comment on polls
 
 **Setup Instructions**   
+Make sure you have `json-server` installed
 
 Open Terminal `CTRL + ALT + T`
 >`git clone https://github.com/nxoo/Phase-1-Project-Polls-App.git`   
 `cd Phase-1-Polls-App`  
-`google-chrome index.html`
+`json-server db.json`   
+`google-chome index.html`
 
 

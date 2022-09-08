@@ -23,7 +23,7 @@
 const fetchData = async () => {
     let url = 'http://localhost:3000/polls'
     let url2 = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls'
-    const res = await fetch(url2)
+    const res = await fetch(url)
     return res.json()
 }
 
@@ -55,7 +55,6 @@ async function pollsList() {
     const pollsDiv = document.createElement('div')
     let ul = document.createElement('ol')
     const polls = await fetchData()
-    console.log(polls)
     for (let x = 0; x < polls.length; x++) {
         let li = document.createElement('li')
         li.classList.add('poll', 'mb-2', 'fs-3')
@@ -80,8 +79,9 @@ async function pollChoices(choices) {
         form.classList.add('form-check')
         let choice = document.createElement('input')
         choice.type = 'radio'
+        choice.required = true
         choice.id = `${choices[x]['id']}`
-        choice.name = 'choices'
+        choice.name = 'choice'
         choice.classList.add('form-check-input')
         let label = document.createElement('label')
         label.htmlFor = `${choices[x]['id']}`
@@ -99,12 +99,16 @@ async function pollVotePage(x) {
     loadingMessage('Poll Data')
     const data = await fetchData()
     const poll = data[x]
-    let div = document.createElement('div')
+    console.log(poll)
+    let form = document.createElement('form')
     let p = document.createElement('p')
     let choices = await pollChoices(poll['choices'])
     let submit = document.createElement('input')
     let resultsTag = document.createElement('p')
     let resultsBtn = document.createElement('a')
+    form.method = "post"
+    form.action = ""
+    form.name = "vote"
     submit.type = 'submit'
     submit.value = 'Vote'
     submit.classList.add('btn', 'btn-success', 'my-4')
@@ -114,11 +118,38 @@ async function pollVotePage(x) {
     resultsBtn.href = "#"
     resultsBtn.classList.add('text-decoration-none')
     resultsBtn.onclick = () => pollResults(poll['id'] - 1)
-    div.appendChild(p)
-    div.appendChild(choices)
-    div.appendChild(submit)
-    div.appendChild(resultsTag).appendChild(resultsBtn)
-    main.appendChild(div)
+
+    submit.onclick = (e) => {
+        e.preventDefault()
+        if(document.querySelector('input[name="choice"]:checked') == null) {
+            window.alert("You need to choose an option!");
+        } else {
+            let radio = Array.from(document.getElementsByName("choice")).find(r => r.checked).id;
+            // patching the whole poll, by taking the original poll data but adding 1 to votes where
+            // variable radio(id of selected choice) matches poll choice id
+            let jsonData = {id: poll.id, poll: poll.poll, choices: [], comments: []}
+            for (let x=0; x<poll.choices.length; x++) {
+                let choice = poll.choices[x]
+                if (parseInt(radio) === choice.id) {
+                    jsonData.choices.push({id:choice.id, choice: choice.choice, votes: choice.votes+1 })
+                } else {
+                    jsonData.choices.push({id:choice.id, choice: choice.choice, votes: choice.votes })
+                }
+            }
+            fetch(`http://localhost:3000/polls/${poll.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(jsonData)
+            }).then(res => res.json())
+                .then(data => pollResults(data['id']-1))
+                .catch(error => console.log(`Error ${error}`))
+        }
+    }
+    form.appendChild(p)
+    form.appendChild(choices)
+    form.appendChild(submit)
+    form.appendChild(resultsTag).appendChild(resultsBtn)
+    main.appendChild(form)
 }
 
 // pluralize `vote` where appropriate
@@ -163,6 +194,7 @@ function questionInput() {
     choiceInput.name = 'question'
     choiceInput.classList.add('form-control', 'mb-2')
     choiceInput.placeholder = "Question"
+    choiceInput.required = true
     return choiceInput
 }
 
@@ -173,6 +205,7 @@ function choiceInput(counter) {
     input.name = 'choice' + counter;
     input.classList.add('form-control', 'my-2')
     input.placeholder = `Choice  ${counter}`
+    input.required = true
     return input
 }
 
@@ -233,8 +266,10 @@ function pollForm(name) {
         e.preventDefault()
         let formData = new FormData(form)
         let formValues = [...formData.entries()]
+        // template of how data looks in db.jon
         let jsonData = {poll: formValues[0][1], choices: [], comments: []}
         for (let x=1; x<formValues.length; x++) {
+            // loop through choices which start at index 1 and add them to db.json[choices]
             jsonData.choices.push({id:x, choice: formValues[x][1], votes: 0})
         }
         console.log(formValues)
@@ -271,14 +306,12 @@ newPollBtn.onclick = () => {
 home.onclick = () => {
     clearMainDiv()
     loadingMessage('Polls')
-    //pollsList().then(res => console.log(res))
-    pollsList().then()
+    pollsList().then(res => console.log(res))
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
     clearMainDiv()
     loadingMessage('Polls')
-    //pollsList().then(res => console.log(res))
-    pollsList().then()
+    pollsList().then(res => console.log(res))
 });
 
