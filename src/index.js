@@ -23,7 +23,7 @@
 const fetchData = async () => {
     let url = 'http://localhost:3000/polls'
     let host = window.location.hostname
-    if (host.includes('github')) {
+    if (host.includes('localhost')) {
         url = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls'
     }
     const res = await fetch(url)
@@ -63,7 +63,7 @@ function LivePageWarning(content, ignore = false) {
         div.classList.add('alert', 'alert-warning', 'alert-dismissible', 'fade', 'show', 'fs-6')
         div.textContent = content
         main.prepend(div)
-    } else if (host.includes('github')) {
+    } else if (host.includes('github.io')) {
         let div = document.createElement('div')
         div.role = 'alert'
         div.classList.add('alert', 'alert-warning', 'alert-dismissible', 'fade', 'show', 'fs-6')
@@ -74,9 +74,9 @@ function LivePageWarning(content, ignore = false) {
 
 // returns an unordered list of polls
 async function pollsList() {
+    const polls = await fetchData()
     const pollsDiv = document.createElement('div')
     let ul = document.createElement('ol')
-    const polls = await fetchData()
     for (let x = 0; x < polls.length; x++) {
         let li = document.createElement('li')
         li.classList.add('poll', 'mb-2', 'fs-3')
@@ -88,6 +88,7 @@ async function pollsList() {
         a.onclick = () => pollVotePage(x)
         ul.appendChild(li).appendChild(a)
     }
+    clearMainDiv()
     main.appendChild(pollsDiv).appendChild(ul)
     return polls
 }
