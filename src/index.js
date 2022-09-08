@@ -55,6 +55,7 @@ async function pollsList() {
     const pollsDiv = document.createElement('div')
     let ul = document.createElement('ol')
     const polls = await fetchData()
+    console.log(polls)
     for (let x = 0; x < polls.length; x++) {
         let li = document.createElement('li')
         li.classList.add('poll', 'mb-2', 'fs-3')
@@ -73,7 +74,6 @@ async function pollsList() {
 // vote page components
 
 async function pollChoices(choices) {
-    console.log(choices)
     let div = document.createElement('div')
     for (let x = 0; x < choices.length; x++) {
         let form = document.createElement('div')
@@ -99,7 +99,6 @@ async function pollVotePage(x) {
     loadingMessage('Poll Data')
     const data = await fetchData()
     const poll = data[x]
-    console.log('po', poll)
     let div = document.createElement('div')
     let p = document.createElement('p')
     let choices = await pollChoices(poll['choices'])
@@ -134,7 +133,6 @@ async function pollResults(x) {
     loadingMessage('Poll Data')
     const data = await fetchData()
     const poll = data[x]
-    console.log(poll)
     let div = document.createElement('div')
     let p = document.createElement('p')
     p.classList.add('fs-4')
@@ -160,10 +158,10 @@ async function pollResults(x) {
 // vote form components
 function questionInput() {
     let choiceInput = document.createElement('input')
-    choiceInput.classList.add('form-control', 'mb-2')
+    choiceInput.id = 'question'
     choiceInput.type = 'text'
     choiceInput.name = 'question'
-    choiceInput.id = 'question'
+    choiceInput.classList.add('form-control', 'mb-2')
     choiceInput.placeholder = "Question"
     return choiceInput
 }
@@ -186,7 +184,7 @@ function pollFormSubmit() {
     return choiceInput
 }
 
-function pollForm() {
+function pollForm(name) {
     let form = document.createElement('form')
     let p = document.createElement('p')
     let choices = document.createElement('div')
@@ -212,6 +210,8 @@ function pollForm() {
     separator.textContent = ' | '
     separator.classList.add('text-secondary')
     form.classList.add('col-sm-7', 'mt-4')
+    form.method = "post"
+    form.id = 'pollForm'
 
     let counter = 2;
     let addInput = function () {
@@ -229,6 +229,24 @@ function pollForm() {
 
     addChoice.onclick = () => addInput()
     removeChoice.onclick = () => removeInput()
+    submit.onclick = (e) => {
+        e.preventDefault()
+        let formData = new FormData(form)
+        let formValues = [...formData.entries()]
+        let jsonData = {poll: formValues[0][1], choices: [], comments: []}
+        for (let x=1; x<formValues.length; x++) {
+            jsonData.choices.push({id:x, choice: formValues[x][1], votes: 0})
+        }
+        console.log(formValues)
+        console.log(jsonData)
+        fetch('http://localhost:3000/polls', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(jsonData)
+        }).then(res => res.json())
+            .then(data => pollVotePage(data['id']-1))
+            .catch(error => console.log(`Error ${error}`))
+    }
 
     div.appendChild(addChoice)
     div.appendChild(separator)
@@ -253,12 +271,14 @@ newPollBtn.onclick = () => {
 home.onclick = () => {
     clearMainDiv()
     loadingMessage('Polls')
-    pollsList().then(res => console.log(res))
+    //pollsList().then(res => console.log(res))
+    pollsList().then()
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
     clearMainDiv()
     loadingMessage('Polls')
-    pollsList().then(res => console.log(res))
+    //pollsList().then(res => console.log(res))
+    pollsList().then()
 });
 
