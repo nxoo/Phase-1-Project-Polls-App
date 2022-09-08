@@ -23,7 +23,7 @@
 const fetchData = async () => {
     let url = 'http://localhost:3000/polls'
     let host = window.location.hostname
-    if (host.includes('localhost')) {
+    if (host.includes('github.io')) {
         url = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls'
     }
     const res = await fetch(url)
@@ -246,6 +246,7 @@ function pollFormSubmit() {
 function pollForm(name) {
     LivePageWarning("POST requests won't work on live page since https://my-json-server.typicode.com does" +
         " not persist data. Setup project locally and install json-server for POST requests to work\"")
+
     let form = document.createElement('form')
     let p = document.createElement('p')
     let choices = document.createElement('div')
@@ -274,6 +275,7 @@ function pollForm(name) {
     form.method = "post"
     form.id = 'pollForm'
 
+    // adding choice input on button click
     let counter = 2;
     let addInput = function () {
         counter++;
