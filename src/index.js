@@ -54,6 +54,18 @@ function loadingMessage(x) {
     }, 2000);
 }
 
+function LivePageWarning() {
+    let host = window.location.hostname
+    if (host.includes('github')) {
+        let div = document.createElement('div')
+        div.classList.add('alert', 'alert-warning', 'alert-dismissible', 'fade', 'show', 'fs-6')
+        div.role = 'alert'
+        div.textContent = "POST requests won't work on live page since https://my-json-server.typicode.com does not" +
+            " persist data. Setup project locally and install json-server for POST requests to work"
+        main.prepend(div)
+    }
+}
+
 // returns an unordered list of polls
 async function pollsList() {
     const pollsDiv = document.createElement('div')
@@ -100,6 +112,7 @@ async function pollChoices(choices) {
 
 async function pollVotePage(x) {
     clearMainDiv()
+    LivePageWarning()
     loadingMessage('Poll Data')
     const data = await fetchData()
     const poll = data[x]
@@ -222,6 +235,7 @@ function pollFormSubmit() {
 }
 
 function pollForm(name) {
+    LivePageWarning()
     let form = document.createElement('form')
     let p = document.createElement('p')
     let choices = document.createElement('div')
