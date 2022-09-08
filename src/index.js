@@ -22,8 +22,12 @@
 
 const fetchData = async () => {
     let url = 'http://localhost:3000/polls'
-    let url2 = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls'
+    let host = window.location.hostname
+    if (host.includes('github')) {
+        url = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls'
+    }
     const res = await fetch(url)
+    console.log(url)
     return res.json()
 }
 
