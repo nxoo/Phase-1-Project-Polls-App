@@ -54,14 +54,20 @@ function loadingMessage(x) {
     }, 2000);
 }
 
-function LivePageWarning() {
+// ignore === true : will ignore whether on localhost or github pages and display alert either way
+function LivePageWarning(content, ignore = false) {
     let host = window.location.hostname
-    if (host.includes('github')) {
+    if (ignore) {
         let div = document.createElement('div')
-        div.classList.add('alert', 'alert-warning', 'alert-dismissible', 'fade', 'show', 'fs-6')
         div.role = 'alert'
-        div.textContent = "POST requests won't work on live page since https://my-json-server.typicode.com does not" +
-            " persist data. Setup project locally and install json-server for POST requests to work"
+        div.classList.add('alert', 'alert-warning', 'alert-dismissible', 'fade', 'show', 'fs-6')
+        div.textContent = content
+        main.prepend(div)
+    } else if (host.includes('github')) {
+        let div = document.createElement('div')
+        div.role = 'alert'
+        div.classList.add('alert', 'alert-warning', 'alert-dismissible', 'fade', 'show', 'fs-6')
+        div.textContent = content
         main.prepend(div)
     }
 }
@@ -112,7 +118,8 @@ async function pollChoices(choices) {
 
 async function pollVotePage(x) {
     clearMainDiv()
-    LivePageWarning()
+    LivePageWarning("POST requests won't work on live page since https://my-json-server.typicode.com " +
+        "does not persist data. Setup project locally and install json-server for POST requests to work")
     loadingMessage('Poll Data')
     const data = await fetchData()
     const poll = data[x]
@@ -138,27 +145,28 @@ async function pollVotePage(x) {
 
     submit.onclick = (e) => {
         e.preventDefault()
-        if(document.querySelector('input[name="choice"]:checked') == null) {
-            window.alert("You need to choose an option!");
+        if (document.querySelector('input[name="choice"]:checked') == null) {
+            // window.alert("You need to choose an option!");
+            LivePageWarning('You need to choose an option!', true)
         } else {
             let radio = Array.from(document.getElementsByName("choice")).find(r => r.checked).id;
             // patching the whole poll, by taking the original poll data but adding 1 to votes where
             // variable radio(id of selected choice) matches poll choice id
             let jsonData = {id: poll.id, poll: poll.poll, choices: [], comments: []}
-            for (let x=0; x<poll.choices.length; x++) {
+            for (let x = 0; x < poll.choices.length; x++) {
                 let choice = poll.choices[x]
                 if (parseInt(radio) === choice.id) {
-                    jsonData.choices.push({id:choice.id, choice: choice.choice, votes: choice.votes+1 })
+                    jsonData.choices.push({id: choice.id, choice: choice.choice, votes: choice.votes + 1})
                 } else {
-                    jsonData.choices.push({id:choice.id, choice: choice.choice, votes: choice.votes })
+                    jsonData.choices.push({id: choice.id, choice: choice.choice, votes: choice.votes})
                 }
             }
             fetch(`http://localhost:3000/polls/${poll.id}`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(jsonData)
             }).then(res => res.json())
-                .then(data => pollResults(data['id']-1))
+                .then(data => pollResults(data['id'] - 1))
                 .catch(error => console.log(`Error ${error}`))
         }
     }
@@ -235,7 +243,8 @@ function pollFormSubmit() {
 }
 
 function pollForm(name) {
-    LivePageWarning()
+    LivePageWarning("POST requests won't work on live page since https://my-json-server.typicode.com does" +
+        " not persist data. Setup project locally and install json-server for POST requests to work\"")
     let form = document.createElement('form')
     let p = document.createElement('p')
     let choices = document.createElement('div')
@@ -286,24 +295,25 @@ function pollForm(name) {
         let formValues = [...formData.entries()]
 
         // check if form has an empty input
-        for (let x=0; x<formValues.length; x++) {
+        for (let x = 0; x < formValues.length; x++) {
             if (formValues[x][1] === '') {
-                alert("Form can't be empty")
+                //alert("Form can't be empty")
+                LivePageWarning("Form can't be empty", true)
                 return
             }
         }
         // template of how data looks in db.jon
         let jsonData = {poll: formValues[0][1], choices: [], comments: []}
-        for (let x=1; x<formValues.length; x++) {
+        for (let x = 1; x < formValues.length; x++) {
             // loop through choices which start at index 1 and add them to db.json[choices]
-            jsonData.choices.push({id:x, choice: formValues[x][1], votes: 0})
+            jsonData.choices.push({id: x, choice: formValues[x][1], votes: 0})
         }
         fetch('http://localhost:3000/polls', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(jsonData)
         }).then(res => res.json())
-            .then(data => pollVotePage(data['id']-1))
+            .then(data => pollVotePage(data['id'] - 1))
             .catch(error => console.log(`Error ${error}`))
     }
 
