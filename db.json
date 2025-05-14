@@ -1,38 +1,43 @@
 {
   "polls": [
     {
-      "id": 1,
-      "poll": "Man United vs Arsenal",
+      "id": "1",
+      "poll": "Man United - Chelsea",
       "choices": [
         {
           "id": 1,
           "choice": "Man United",
-          "votes": 0
+          "votes": 1
         },
         {
           "id": 2,
-          "choice": "Arsenal",
+          "choice": "Chelsea",
+          "votes": 0
+        },
+        {
+          "id": 3,
+          "choice": "Draw",
           "votes": 0
         }
       ],
       "comments": []
     },
     {
-      "poll": "Real Madrid vs Barcelona",
+      "id": "2",
+      "poll": "Barcelona - Real Madrid",
       "choices": [
         {
           "id": 1,
-          "choice": "Real Madrid",
+          "choice": "Barcelona",
           "votes": 0
         },
         {
           "id": 2,
-          "choice": "FC Barcelona",
+          "choice": "Real Madrid",
           "votes": 0
         }
       ],
-      "comments": [],
-      "id": 2
+      "comments": []
     }
   ]
 }
