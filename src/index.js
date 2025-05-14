@@ -85,7 +85,7 @@ let main = document.querySelector('#main');
 let home = document.querySelector('#home');
 let newPollBtn = document.querySelector('#newPoll');
 let pollsLength;
-let typicodeUrl = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls';
+let typicodeUrl = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls/';
 let host = window.location.hostname;
 
 const fetchData = async (url) => {
@@ -231,7 +231,7 @@ async function pollVotePage(x) {
         }
       }
       console.log(jsonData);
-      let url  = host.includes('github.io') ? typicodeUrl : `http://localhost:3000/polls/${poll.id}`
+      let url  = host.includes('github.io') ? typicodeUrl + poll.id : `http://localhost:3000/polls/${poll.id}`
       fetch(url, {
         method: 'PATCH',
         headers: {'Content-Type': 'application/json'},
@@ -379,7 +379,7 @@ function pollForm(name) {
       // loop through choices which start at index 1 and add them to db.json[choices]
       jsonData.choices.push({id: x, choice: formValues[x][1], votes: 0});
     }
-    let url  = host.includes('github.io') ? typicodeUrl : `http://localhost:3000/polls/${poll.id}`
+    let url  = host.includes('github.io') ? typicodeUrl : 'http://localhost:3000/polls'
     fetch(url, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
