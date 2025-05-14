@@ -161,7 +161,7 @@ async function pollsList() {
 
 // vote page components
 
-async function pollChoices(choices) {
+function pollChoices(choices) {
   let div = document.createElement('div');
   for (let x = 0; x < choices.length; x++) {
     let form = document.createElement('div');
@@ -193,7 +193,7 @@ async function pollVotePage(x) {
   const poll = await fetchData(url+x);
   let form = document.createElement('form');
   let p = document.createElement('p');
-  let choices = await pollChoices(poll['choices']);
+  let choices = pollChoices(poll['choices']);
   let submit = document.createElement('input');
   let resultsTag = document.createElement('p');
   let resultsBtn = document.createElement('a');

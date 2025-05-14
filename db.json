@@ -7,12 +7,12 @@
         {
           "id": 1,
           "choice": "Man United",
-          "votes": 2
+          "votes": 3
         },
         {
           "id": 2,
           "choice": "Chelsea",
-          "votes": 0
+          "votes": 1
         },
         {
           "id": 3,
@@ -34,6 +34,28 @@
         {
           "id": 2,
           "choice": "Real Madrid",
+          "votes": 0
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "3",
+      "poll": "Inter Milan - AC Milan",
+      "choices": [
+        {
+          "id": 1,
+          "choice": "Inter",
+          "votes": 1
+        },
+        {
+          "id": 2,
+          "choice": "Milan",
+          "votes": 0
+        },
+        {
+          "id": 3,
+          "choice": "Draw",
           "votes": 0
         }
       ],
