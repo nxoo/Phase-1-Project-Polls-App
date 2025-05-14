@@ -85,14 +85,15 @@ let main = document.querySelector('#main');
 let home = document.querySelector('#home');
 let newPollBtn = document.querySelector('#newPoll');
 let pollsLength;
+let typicodeUrl = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls';
+let host = window.location.hostname;
 
 const fetchData = async (url) => {
-  let host = window.location.hostname;
   if (host.includes('github.io')) {
     url = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls';
   }
   const res = await fetch(url);
-  return res.json();
+  return await res.json();
 };
 
 // clear div#main components
@@ -188,8 +189,7 @@ async function pollVotePage(x) {
       'POST requests won\'t work on live page since https://my-json-server.typicode.com ' +
       'does not persist data. Setup project locally and install json-server for POST requests to work');
   loadingMessage('');
-  const res = await fetch(`http://localhost:3000/polls/${x}`);
-  let poll = await res.json();
+  const poll = await fetchData(`http://localhost:3000/polls/${x}`);
   let form = document.createElement('form');
   let p = document.createElement('p');
   let choices = await pollChoices(poll['choices']);
@@ -231,7 +231,8 @@ async function pollVotePage(x) {
         }
       }
       console.log(jsonData);
-      fetch(`http://localhost:3000/polls/${poll.id}`, {
+      let url  = host.includes('github.io') ? typicodeUrl : `http://localhost:3000/polls/${poll.id}`
+      fetch(url, {
         method: 'PATCH',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(jsonData),
@@ -378,7 +379,8 @@ function pollForm(name) {
       // loop through choices which start at index 1 and add them to db.json[choices]
       jsonData.choices.push({id: x, choice: formValues[x][1], votes: 0});
     }
-    fetch('http://localhost:3000/polls', {
+    let url  = host.includes('github.io') ? typicodeUrl : `http://localhost:3000/polls/${poll.id}`
+    fetch(url, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(jsonData),
