@@ -135,8 +135,8 @@ function LivePageWarning(content, ignore = false) {
 }
 
 // returns an unordered list of polls
-async function pollsList() {
-  const polls = await fetchData('http://localhost:3000/polls');
+function pollsList() {
+  const polls = fetchData('http://localhost:3000/polls');
   pollsLength = polls.length;
   const pollsDiv = document.createElement('div');
   if (pollsLength > 0) {
