@@ -147,7 +147,7 @@ async function pollsList() {
       a.textContent = polls[x - 1]['poll'];
       a.href = '#';
       a.id = `${x}`;
-      a.onclick = () => pollVotePage(x);
+      a.onclick = async () => await pollVotePage(x);
       pollsDiv.appendChild(a);
     }
     clearMainDiv();
