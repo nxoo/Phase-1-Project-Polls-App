@@ -92,7 +92,7 @@ async function fetchData(url) {
   if (host.includes('github.io')) {
     url = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls';
   }
-  const res = await fetch(url)
+  const res = await fetch(url);
   return await res.json();
 }
 
@@ -163,23 +163,23 @@ async function pollsList() {
 
 async function pollChoices(choices) {
   let div = document.createElement('div');
-  for (let x = 0; x < choices.length; x++) {
+  choices.forEach(x => {
     let form = document.createElement('div');
     form.classList.add('form-check');
     let choice = document.createElement('input');
     choice.type = 'radio';
     choice.required = true;
-    choice.id = `${choices[x]['id']}`;
+    choice.id = x.id;
     choice.name = 'choice';
     choice.classList.add('form-check-input');
     let label = document.createElement('label');
-    label.htmlFor = `${choices[x]['id']}`;
-    label.textContent = choices[x]['choice'];
+    label.htmlFor = x.id;
+    label.textContent = x.choice;
     label.classList.add('form-check-label');
     form.appendChild(choice);
     form.appendChild(label);
     div.appendChild(form);
-  }
+  });
   return div;
 }
 
@@ -189,11 +189,13 @@ async function pollVotePage(x) {
       'POST requests won\'t work on live page since https://my-json-server.typicode.com ' +
       'does not persist data. Setup project locally and install json-server for POST requests to work');
   loadingMessage('');
-  let url  = host.includes('github.io') ? typicodeUrl : 'http://localhost:3000/polls/'
-  const poll = await fetchData(url+x);
+  let url = host.includes('github.io')
+      ? typicodeUrl
+      : 'http://localhost:3000/polls/';
+  const poll = await fetchData(url + x);
   let form = document.createElement('form');
   let p = document.createElement('p');
-  let choices =  await pollChoices(poll['choices']);
+  let choices = await pollChoices(poll['choices']);
   let submit = document.createElement('input');
   let resultsTag = document.createElement('p');
   let resultsBtn = document.createElement('a');
@@ -232,7 +234,9 @@ async function pollVotePage(x) {
         }
       }
       console.log(jsonData);
-      let url  = host.includes('github.io') ? typicodeUrl + poll.id : `http://localhost:3000/polls/${poll.id}`
+      let url = host.includes('github.io')
+          ? typicodeUrl + poll.id
+          : `http://localhost:3000/polls/${poll.id}`;
       fetch(url, {
         method: 'PATCH',
         headers: {'Content-Type': 'application/json'},
@@ -254,8 +258,10 @@ async function pollVotePage(x) {
 async function pollResults(x) {
   clearMainDiv();
   loadingMessage('');
-  let url  = host.includes('github.io') ? typicodeUrl : 'http://localhost:3000/polls/'
-  const poll = await fetchData(url+x);
+  let url = host.includes('github.io')
+      ? typicodeUrl
+      : 'http://localhost:3000/polls/';
+  const poll = await fetchData(url + x);
   let div = document.createElement('div');
   let p = document.createElement('p');
   p.classList.add('fs-4');
@@ -267,12 +273,12 @@ async function pollResults(x) {
   backBtn.onclick = () => pollVotePage(poll.id);
   p.textContent = poll['poll'];
   div.appendChild(p);
-  for (let x = 0; x < poll['choices'].length; x++) {
+  poll.choices.forEach(x => {
     let choice = document.createElement('li');
-    let votes = poll['choices'][x]['votes'];
-    choice.textContent = `${poll['choices'][x]['choice']} - ${votes}`;
+    let votes = x.votes;
+    choice.textContent = `${x.choice} - ${votes}`;
     ul.appendChild(choice);
-  }
+  });
   div.appendChild(ul);
   div.appendChild(backBtn);
   main.appendChild(div);
@@ -380,7 +386,9 @@ async function pollForm(name) {
       // loop through choices which start at index 1 and add them to db.json[choices]
       jsonData.choices.push({id: x, choice: formValues[x][1], votes: 0});
     }
-    let url  = host.includes('github.io') ? typicodeUrl : 'http://localhost:3000/polls'
+    let url = host.includes('github.io')
+        ? typicodeUrl
+        : 'http://localhost:3000/polls';
     fetch(url, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
