@@ -162,8 +162,8 @@ async function pollsList() {
 // vote page components
 
 async function pollChoices(choices) {
-  let div = document.createElement('div');
-  choices.forEach(x => {
+  let div = await document.createElement('div');
+  await choices.forEach(x => {
     let form = document.createElement('div');
     form.classList.add('form-check');
     let choice = document.createElement('input');
