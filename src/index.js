@@ -88,13 +88,13 @@ let pollsLength;
 let typicodeUrl = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls/';
 let host = window.location.hostname;
 
-const fetchData = async (url) => {
+async function fetchData(url) {
   if (host.includes('github.io')) {
     url = 'https://my-json-server.typicode.com/nxoo/Phase-1-Project-Polls-App/polls';
   }
-  const res = await fetch(url);
+  const res = await fetch(url)
   return await res.json();
-};
+}
 
 // clear div#main components
 function clearMainDiv() {
@@ -114,7 +114,7 @@ function loadingMessage(x) {
   }, 500);
 }
 
-// ignore === true : will ignore whether on localhost or Github pages and display alert either way
+// ignore === true : will ignore whether on localhost or GitHub pages and display alert either way
 function LivePageWarning(content, ignore = false) {
   let host = window.location.hostname;
   if (ignore) {
@@ -135,8 +135,8 @@ function LivePageWarning(content, ignore = false) {
 }
 
 // returns an unordered list of polls
-function pollsList() {
-  const polls = fetchData('http://localhost:3000/polls');
+async function pollsList() {
+  const polls = await fetchData('http://localhost:3000/polls');
   pollsLength = polls.length;
   const pollsDiv = document.createElement('div');
   if (pollsLength > 0) {
@@ -161,7 +161,7 @@ function pollsList() {
 
 // vote page components
 
-function pollChoices(choices) {
+async function pollChoices(choices) {
   let div = document.createElement('div');
   for (let x = 0; x < choices.length; x++) {
     let form = document.createElement('div');
@@ -183,14 +183,14 @@ function pollChoices(choices) {
   return div;
 }
 
-function pollVotePage(x) {
+async function pollVotePage(x) {
   clearMainDiv();
   LivePageWarning(
       'POST requests won\'t work on live page since https://my-json-server.typicode.com ' +
       'does not persist data. Setup project locally and install json-server for POST requests to work');
   loadingMessage('');
   let url  = host.includes('github.io') ? typicodeUrl : 'http://localhost:3000/polls/'
-  const poll = fetchData(url+x);
+  const poll = await fetchData(url+x);
   let form = document.createElement('form');
   let p = document.createElement('p');
   let choices =  pollChoices(poll['choices']);
@@ -244,18 +244,18 @@ function pollVotePage(x) {
     }
   };
   form.appendChild(p);
-  form.appendChild(choices);
+  await form.appendChild(await choices);
   form.appendChild(submit);
   form.appendChild(resultsTag).appendChild(resultsBtn);
   main.appendChild(form);
 }
 
 // vote results
-function pollResults(x) {
+async function pollResults(x) {
   clearMainDiv();
   loadingMessage('');
   let url  = host.includes('github.io') ? typicodeUrl : 'http://localhost:3000/polls/'
-  const poll = fetchData(url+x);
+  const poll = await fetchData(url+x);
   let div = document.createElement('div');
   let p = document.createElement('p');
   p.classList.add('fs-4');
@@ -290,7 +290,7 @@ function questionInput() {
   return choiceInput;
 }
 
-function choiceInput(counter) {
+async function choiceInput(counter) {
   let input = document.createElement('input');
   input.id = 'choice' + counter;
   input.type = 'text';
@@ -301,7 +301,7 @@ function choiceInput(counter) {
   return input;
 }
 
-function pollFormSubmit() {
+async function pollFormSubmit() {
   let choiceInput = document.createElement('input');
   choiceInput.classList.add('form-control', 'btn', 'btn-success', 'my-1');
   choiceInput.type = 'submit';
@@ -309,7 +309,7 @@ function pollFormSubmit() {
   return choiceInput;
 }
 
-function pollForm(name) {
+async function pollForm(name) {
   LivePageWarning(
       'POST requests won\'t work on live page since https://my-json-server.typicode.com does' +
       ' not persist data. Setup project locally and install json-server for POST requests to work"');
@@ -344,10 +344,10 @@ function pollForm(name) {
 
   // adding choice input on button click
   let counter = 2;
-  let addInput = function() {
+  let addInput = async function() {
     counter++;
     let input = choiceInput(counter);
-    choices.appendChild(input);
+    choices.appendChild(await input);
   };
 
   let removeInput = function() {
@@ -397,18 +397,18 @@ function pollForm(name) {
 
   form.appendChild(p);
   form.appendChild(question);
-  form.appendChild(choice1);
-  form.appendChild(choice2);
+  await form.appendChild(await choice1);
+  await form.appendChild(await choice2);
   form.appendChild(div);
   form.appendChild(choices);
-  form.appendChild(submit);
+  await form.appendChild(await submit);
   main.appendChild(form);
 }
 
 // navbar `+ Create new poll` button
 newPollBtn.onclick = () => {
   clearMainDiv();
-  pollForm();
+  pollForm().then(r => console.log(r));
 };
 
 home.onclick = () => {
