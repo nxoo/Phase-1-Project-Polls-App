@@ -183,17 +183,17 @@ function pollChoices(choices) {
   return div;
 }
 
-async function pollVotePage(x) {
+function pollVotePage(x) {
   clearMainDiv();
   LivePageWarning(
       'POST requests won\'t work on live page since https://my-json-server.typicode.com ' +
       'does not persist data. Setup project locally and install json-server for POST requests to work');
   loadingMessage('');
   let url  = host.includes('github.io') ? typicodeUrl : 'http://localhost:3000/polls/'
-  const poll = await fetchData(url+x);
+  const poll = fetchData(url+x);
   let form = document.createElement('form');
   let p = document.createElement('p');
-  let choices = await pollChoices(poll['choices']);
+  let choices =  pollChoices(poll['choices']);
   let submit = document.createElement('input');
   let resultsTag = document.createElement('p');
   let resultsBtn = document.createElement('a');
@@ -251,11 +251,11 @@ async function pollVotePage(x) {
 }
 
 // vote results
-async function pollResults(x) {
+function pollResults(x) {
   clearMainDiv();
   loadingMessage('');
   let url  = host.includes('github.io') ? typicodeUrl : 'http://localhost:3000/polls/'
-  const poll = await fetchData(url+x);
+  const poll = fetchData(url+x);
   let div = document.createElement('div');
   let p = document.createElement('p');
   p.classList.add('fs-4');
