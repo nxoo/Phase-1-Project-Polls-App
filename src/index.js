@@ -162,6 +162,7 @@ async function pollsList() {
 // vote page components
 
 async function pollChoices(choices) {
+  console.log(choices);
   let div = await document.createElement('div');
   await choices.forEach(x => {
     let form = document.createElement('div');
